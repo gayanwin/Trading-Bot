@@ -1,0 +1,29 @@
+name: Gayanmx_24_7_Bot
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # විනාඩි 5න් 5ට බොට්ව පණගන්වයි
+  workflow_dispatch: # බට්න් එකෙන් රන් කිරීමට
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Wine
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+          sudo apt install -y wine64 wine32
+
+      - name: Start Trading Bot
+        env:
+          InpBotToken: ${{ secrets.TOKEN }}
+          InpAdminID: ${{ secrets.ADMIN_ID }}
+          InpWebURL: ${{ secrets.WEB_URL }}
+        run: |
+          # උඹේ 27 KB .ex5 ෆයිල් එක මෙතනින් රන් වෙනවා
+          wine TelegramTradeBot.ex5 &
+          sleep 300
